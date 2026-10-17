@@ -1,8 +1,7 @@
 // ==========================================
-// 1. ENGINE CONTROLLER CACHE CONFIGURATIONS
+// 1. ENGINE CONTROLLER CONFIGURATIONS (MULTIPLE ITEMS)
 // ==========================================
-let selectedItemFile = "";
-let selectedItemName = "";
+let selectedItems = []; // Array to store multiple active items: [{name: '', file: ''}]
 
 let timerInterval = null;
 let timeRemainingSeconds = 25 * 60; 
@@ -19,41 +18,61 @@ function closeModal(modalId) {
 }
 
 // ==========================================
-// 2. CHECKOUT TRANSACTION PROCEDURES
+// 2. MULTI-SELECT CHECKOUT TRANSACTION PROCEDURES
 // ==========================================
 function selectItem(element, filename) {
-    document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('selected'));
-    element.classList.add('selected');
-    selectedItemFile = filename;
-    selectedItemName = element.querySelector('.item-name').innerText;
+    const itemName = element.querySelector('.item-name').innerText;
+    
+    // Check if this specific item is already selected
+    const existingIndex = selectedItems.findIndex(item => item.file === filename);
+
+    if (existingIndex > -1) {
+        // If already selected, deselect it
+        element.classList.remove('selected');
+        selectedItems.splice(existingIndex, 1);
+    } else {
+        // If not selected, add it to our array list
+        element.classList.add('selected');
+        selectedItems.push({ name: itemName, file: filename });
+    }
 }
 
 function submitOrder() {
     const nameInput = document.getElementById("user-name-input");
     const name = nameInput.value.trim();
 
-    if (!selectedItemFile || !name) {
-        alert("Please pick a menu card item and enter your name!");
+    if (selectedItems.length === 0 || !name) {
+        alert("Please pick at least one menu item and enter your name!");
         return;
     }
 
     document.getElementById("menu-modal").style.display = "none";
 
-    // Clear previous food asset array deck completely 
+    // Clear previous food assets on the table completely
     const tableZone = document.getElementById("side-table-zone");
     tableZone.innerHTML = ""; 
 
-    // Instantiate fresh dynamic dish placement directly onto left table deck
-    const dishImg = document.createElement("img");
-    dishImg.src = selectedItemFile; 
-    dishImg.classList.add("served-dish");
-    dishImg.alt = selectedItemName;
-    tableZone.appendChild(dishImg);
+    // Build the names string for the receipt popup
+    let itemsListHtml = "";
 
-    // Populate log verification data block overlay sheet
+    // Loop through every item selected and place them all together on the counter
+    selectedItems.forEach(item => {
+        const dishImg = document.createElement("img");
+        dishImg.src = item.file; 
+        dishImg.classList.add("served-dish");
+        dishImg.alt = item.name;
+        tableZone.appendChild(dishImg);
+
+        itemsListHtml += `<p style="margin: 6px 0; font-size: 15px;"><strong>•</strong> ${item.name}</p>`;
+    });
+
+    // Populate log verification summary sheet overlay
     document.getElementById("receipt-details").innerHTML = `
-        <p style="margin: 12px 0; font-size: 16px;"><strong>Ordered:</strong> ${selectedItemName}</p>
-        <p style="font-size: 18px; color: #8c715c; font-weight: bold; text-transform: uppercase;">✨ ${name} ✨</p>
+        <div style="text-align: left; margin: 10px auto; max-width: 250px;">
+            ${itemsListHtml}
+        </div>
+        <p style="font-size: 13px; color: #777; margin-top: 15px;">Freshly prepared for:</p>
+        <p style="font-size: 18px; color: #8c715c; font-weight: bold; text-transform: uppercase; margin-top: 5px;">✨ ${name} ✨</p>
     `;
     document.getElementById("receipt-modal").style.display = "flex";
 
@@ -62,7 +81,7 @@ function submitOrder() {
 }
 
 function resetMenuSelections() {
-    selectedItemFile = ""; selectedItemName = "";
+    selectedItems = [];
     document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('selected'));
 }
 
@@ -81,7 +100,7 @@ function loadYoutubeVideo() {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = urlInput.match(regExp);
 
-    if (match && match[2].length === 11) {
+    if (match && match.length === 11) {
         const videoId = match[2];
         screenContainer.innerHTML = `<iframe src="https://youtube.com{videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
     } else {
