@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Fusion Cafe & Study Space</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="cafe-container">
+        <div id="cafe-stage">
+            <!-- Scene Background Artwork -->
+            <img src="cafe-background.jpg" id="background-img" alt="Cafe Room Scene">
+
+            <!-- Persistent Utility Control Hub Menu -->
+            <div id="control-panel">
+                <button class="nav-btn" onclick="openMenu()">📖 MENU & ORDER</button>
+                <button class="nav-btn" onclick="openTv()">📺 WATCH TV</button>
+                <button class="nav-btn" onclick="openTimer()">⏳ STUDY TIMER</button>
+            </div>
+
+            <!-- Clickable TV Overlay Hitbox Frame -->
+            <div id="tv-screen-hitbox" onclick="openTv()" title="Click to view TV panel"></div>
+
+            <!-- In-Clock Mechanical Timer HUD Display -->
+            <div id="room-timer-display" onclick="openTimer()" title="Click to adjust focus timer">
+                <span id="hud-time-string">25:00</span>
+            </div>
+
+            <!-- Left Desk Plate Counter Serving Dock Tray -->
+            <div id="side-table-zone">
+                <!-- Servings sit here next to Parle-G pack -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. FUSION CAFE SELECTION MENU MODAL -->
+    <div id="menu-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>CAFE MENU</h2>
+            <p class="subtitle">Select a treat and enter your name to place your order!</p>
+            
+            <div class="menu-grid">
+                <div class="menu-item" onclick="selectItem(this, 'miso-butter-samosa.png')">
+                    <div class="item-icon">🥟</div>
+                    <span class="item-name">Miso Butter Samosa</span>
+                </div>
+                <div class="menu-item" onclick="selectItem(this, 'tempura-pakora.png')">
+                    <div class="item-icon">🍤</div>
+                    <span class="item-name">Tempura Pakora</span>
+                </div>
+                <div class="menu-item" onclick="selectItem(this, 'paneer-satay.png')">
+                    <div class="item-icon">🍢</div>
+                    <span class="item-name">Paneer Satay</span>
+                </div>
+                <div class="menu-item" onclick="selectItem(this, 'katsu-club-sandwich.png')">
+                    <div class="item-icon">🥪</div>
+                    <span class="item-name">Katsu Club Sandwich</span>
+                </div>
+                <div class="menu-item" onclick="selectItem(this, 'black-sesame-badam-latte.png')">
+                    <div class="item-icon">🧋</div>
+                    <span class="item-name">Iced Black Sesame Badam Latte</span>
+                </div>
+                <div class="menu-item" onclick="selectItem(this, 'miso-caramel-cold-coffee.png')">
+                    <div class="item-icon">🥤</div>
+                    <span class="item-name">Miso Caramel Cold Coffee</span>
+                </div>
+                <div class="menu-item" onclick="selectItem(this, 'black-sesame-kulfi.png')">
+                    <div class="item-icon">🍦</div>
+                    <span class="item-name">Black Sesame Kulfi</span>
+                </div>
+                <div class="menu-item" onclick="selectItem(this, 'coconut-jaggery-mochi.png')">
+                    <div class="item-icon">🍡</div>
+                    <span class="item-name">Coconut Jaggery Mochi</span>
+                </div>
+            </div>
+
+            <div class="order-form">
+                <input type="text" id="user-name-input" placeholder="YOUR NAME..." autocomplete="off">
+                <button id="order-submit-btn" onclick="submitOrder()">ORDER!</button>
+            </div>
+            <button class="cancel-txt" onclick="closeModal('menu-modal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- 2. TELEVISION CONTROLLER OVERLAY PANEL -->
+    <div id="tv-modal" class="modal-overlay">
+        <div class="modal-content tv-box">
+            <h2>RETRO TV CONTROLLER</h2>
+            <p class="subtitle">Paste a YouTube link below to start streaming background music and loops</p>
+            
+            <div id="tv-screen-container">
+                <div id="tv-placeholder">📺 TV IS TURNED OFF</div>
+            </div>
+
+            <div class="url-form">
+                <input type="text" id="youtube-url-input" placeholder="Paste YouTube link here...">
+                <button onclick="loadYoutubeVideo()">LOAD</button>
+            </div>
+            <button class="cancel-txt" onclick="closeModal('tv-modal')">Close Control Deck</button>
+        </div>
+    </div>
+
+    <!-- 3. focus POMODORO INTERVAL CONTROLLER -->
+    <div id="timer-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>STUDY TIMER</h2>
+            <p class="subtitle">Set your core study interval below</p>
+            
+            <div id="modal-time-display">25:00</div>
+
+            <div class="timer-presets">
+                <button onclick="setTimerPreset(1)">1 Min</button>
+                <button onclick="setTimerPreset(5)">5 Min</button>
+                <button onclick="setTimerPreset(25)">25 Min</button>
+                <button onclick="setTimerPreset(50)">50 Min</button>
+            </div>
+
+            <div class="timer-controls">
+                <button id="start-pause-btn" onclick="toggleTimerRunning()">START</button>
+                <button onclick="resetTimer()">RESET</button>
+            </div>
+            <button class="cancel-txt" onclick="closeModal('timer-modal')">Close</button>
+        </div>
+    </div>
+
+    <!-- 4. RECEIPT NOTIFICATION LOG SHEET -->
+    <div id="receipt-modal" class="modal-overlay" onclick="closeModal('receipt-modal')">
+        <div class="receipt-content" onclick="event.stopPropagation()">
+            <h3>ORDER SERVED!</h3>
+            <div id="receipt-details"></div>
+            <button class="thanks-btn" onclick="closeModal('receipt-modal')">THANKS!</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
